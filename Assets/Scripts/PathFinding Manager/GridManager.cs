@@ -1,28 +1,42 @@
-using IsometricGame.Logic;
 using UnityEngine;
+using UnityEngine.Tilemaps;
+using IsometricGame.Adapters;
+using IsometricGame.Logic;
 
 public class GridManager : MonoBehaviour
 {
-    public int gridWidth = 5;
-    public int gridHeigth = 5;
+    [Header("Scene References")]
+    public Grid unityGrid;
+    public Tilemap groundTilemap;   // arrastra aquí tu tilemap del escenario
 
+    private LogicGrid.PathGrid pathGrid;
+    private UnityGridAdapter gridAdapter;
 
-    private LogicGrid.PathGrid grid;
-
-    /// <summary>
-    /// Awake is called when the script instance is being loaded.
-    /// </summary>
     void Awake()
     {
-        // Paso 1: crear la configuración base
-        LogicGrid.GridConfig cfg = new LogicGrid.GridConfig(gridWidth, gridHeigth);
+        // 1️⃣ Crear adapter de Tilemap y generar la grilla lógica
+        var tileAdapter = new TilemapGridAdapter(groundTilemap);
+        pathGrid = tileAdapter.BuildPathGrid();
 
+        // 2️⃣ Crear adapter visual para conversiones Mundo↔Celda
+        gridAdapter = new UnityGridAdapter(unityGrid);
 
-        // Paso 2: crear la grilla lógica e inicializarla
-        grid = new LogicGrid.PathGrid();
-        grid.Initialize(cfg);
-        // Paso 3: pruebas de modificación
-        grid.GetAllMap();
+        Debug.Log($"PathGrid generado: {pathGrid.CountWalkables()} celdas caminables");
+    }
 
+    void OnDrawGizmosSelected()
+    {
+        if (pathGrid == null || gridAdapter == null) return;
+
+        // Dibuja en escena las celdas walkables
+        for (int i = 0; i < 10; i++)
+        {
+            for (int j = 0; j < 10; j++)
+            {
+                var c = new LogicGrid.CellIndex { i = i, j = j };
+                if (pathGrid.IsWalkable(c))
+                    gridAdapter.DrawCellGizmo(c, Color.cyan);
+            }
+        }
     }
 }
