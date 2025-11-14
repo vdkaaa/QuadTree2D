@@ -12,6 +12,13 @@ namespace IsometricGame.Logic
         {
             public int i;
             public int j;
+
+            // Constructor: te permite crear una instancia con valores iniciales
+            public CellIndex(int i, int j)
+            {
+                this.i = i;
+                this.j = j;
+            }
         }
 
         public struct TileData

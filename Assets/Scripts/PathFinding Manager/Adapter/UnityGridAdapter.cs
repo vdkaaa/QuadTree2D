@@ -28,11 +28,11 @@ namespace IsometricGame.Adapters
         /// <summary>
         /// Mundo → Celda (índices i,j de tu PathGrid)
         /// </summary>
-        public LogicGrid.CellIndex WorldToCell(Vector3 worldPos)
+        public Vector3Int WorldToCell(Vector3 worldPos)
         {
             // Ojo: WorldToCell ya considera rotación/escala del Grid isométrico.
             var cell = unityGrid.WorldToCell(worldPos);
-            return new LogicGrid.CellIndex { i = cell.x, j = cell.y };
+            return cell;
         }
 
         /// <summary>
