@@ -32,12 +32,9 @@ namespace IsometricGame.Adapters
             foreach (var pos in bounds.allPositionsWithin)
             {
                 var tile = tilemap.GetTile(pos);
-                var c = new LogicGrid.CellIndex
-                {
-                    i = pos.x - bounds.xMin, // normalizar a índice 0-based
-                    j = pos.y - bounds.yMin
-                };
-
+                var c = new Vector2Int();
+                c.x = pos.x - bounds.xMin; // normalizar a índice 0-based
+                c.y = pos.y - bounds.yMin;
                 if (tile == null)
                 {
                     pathGrid.SetWalkable(c, false);

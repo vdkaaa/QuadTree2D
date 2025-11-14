@@ -34,7 +34,7 @@ namespace IsometricGame.DebugTools
         [SerializeField]
         private bool inBounds = false;
 
-        public Action<LogicGrid.CellIndex, bool> OnHoverCellChanged;
+        public Action<Vector2Int, bool> OnHoverCellChanged;
 
         private BoundsInt _bounds;
         private Matrix4x4 _orient;
@@ -95,16 +95,22 @@ namespace IsometricGame.DebugTools
                 hoverI = inside ? i : -1;
                 hoverJ = inside ? j : -1;
 
-                OnHoverCellChanged?.Invoke(new LogicGrid.CellIndex { i = hoverI, j = hoverJ }, inBounds);
+                var c = new Vector2Int();
+                c.x= hoverI;
+                c.y= hoverJ;
+                OnHoverCellChanged?.Invoke(c, inBounds);
             }
         }
 
         /// <summary>
         /// Devuelve el índice actual (0-based) y si está dentro de los bounds.
         /// </summary>
-        public (LogicGrid.CellIndex cell, bool isInside) GetHoverCell()
+        public (Vector2Int _cell, bool isInside) GetHoverCell()
         {
-            return (new LogicGrid.CellIndex { i = hoverI, j = hoverJ }, inBounds);
+            var cell = new Vector2Int();
+            cell.x = hoverI;
+            cell.y = hoverJ;
+            return (cell, inBounds);
         }
 
         void OnDrawGizmos()

@@ -6,7 +6,7 @@ namespace IsometricGame.Interface
    public interface IGridCoordinateConverter
     {
     Vector3Int WorldToCell(Vector3 worldPos);
-    Vector3 CellToWorld(LogicGrid.CellIndex cell);
+    Vector3 CellToWorld(Vector2Int cell);
     }
  
 }

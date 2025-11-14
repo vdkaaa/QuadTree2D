@@ -7,20 +7,6 @@ namespace IsometricGame.Logic
 {
     public class LogicGrid
     {
-
-       public struct CellIndex
-        {
-            public int i;
-            public int j;
-
-            // Constructor: te permite crear una instancia con valores iniciales
-            public CellIndex(int i, int j)
-            {
-                this.i = i;
-                this.j = j;
-            }
-        }
-
         public struct TileData
         {
             public  bool walkable;
@@ -74,63 +60,63 @@ namespace IsometricGame.Logic
 
 
             #region Verificación
-            public bool InBounds(CellIndex c)
+            public bool InBounds(Vector2Int c)
             {
-                return c.i >= 0 && c.i < grid.width
-                    && c.j >= 0 && c.j < grid.height;
+                return c.x >= 0 && c.x < grid.width
+                    && c.y >= 0 && c.y < grid.height;
             }
             #endregion
 
             #region Consultas
-            public bool IsWalkable(CellIndex c)
+            public bool IsWalkable(Vector2Int c)
             {
                 if (!InBounds(c)) return false;
-                return _tiles[c.i, c.j].walkable;
+                return _tiles[c.x, c.y].walkable;
             }
-            public float GetCost(CellIndex c)
+            public float GetCost(Vector2Int c)
             {
                 if (!InBounds(c)) return float.PositiveInfinity;
-                return _tiles[c.i, c.j].cost;
+                return _tiles[c.x, c.y].cost;
 
             }
-            public int GetArea(CellIndex c)
+            public int GetArea(Vector2Int c)
             {
                 if (!InBounds(c)) return -1;
-                return _tiles[c.i, c.j].areaId;
+                return _tiles[c.x, c.y].areaId;
             }
             #endregion
 
             #region Edición
 
-            public void SetTile(CellIndex c, TileData t)
+            public void SetTile(Vector2Int c, TileData t)
             {
                 if (InBounds(c))
                 {
-                    _tiles[c.i, c.j] = t;
+                    _tiles[c.x, c.y] = t;
                 }
             }
 
-            public void SetWalkable(CellIndex c, bool value)
+            public void SetWalkable(Vector2Int c, bool value)
             {
                 if (InBounds(c))
                 {
-                    _tiles[c.i, c.j].walkable = value;
+                    _tiles[c.x, c.y].walkable = value;
                 }
             }
 
-            public void SetCost(CellIndex c, float value)
+            public void SetCost(Vector2Int c, float value)
             {
                 if (InBounds(c))
                 {
-                    _tiles[c.i, c.j].cost = Mathf.Max(0, value);
+                    _tiles[c.x, c.y].cost = Mathf.Max(0, value);
                 }
             }
 
-            public void SetArea(CellIndex c, int id)
+            public void SetArea(Vector2Int c, int id)
             {
                 if (InBounds(c))
                 {
-                    _tiles[c.i, c.j].areaId = id;
+                    _tiles[c.x, c.y].areaId = id;
                 }
             }
             #endregion
