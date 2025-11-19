@@ -98,11 +98,7 @@ ayudar a optimizar consultas espaciales en un proyecto 2D.
 
 ---
 
-## 🔍 Cómo funciona el Quadtree en esta demo
-
 ### Componente central: `QuadTreeInteractive`
-
-Este script se encarga de orquestar todo:
 
 ```csharp
 public class QuadTreeInteractive : MonoBehaviour
