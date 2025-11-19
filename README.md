@@ -100,7 +100,7 @@ ayudar a optimizar consultas espaciales en un proyecto 2D.
 
 ## 🔍 Cómo funciona el Quadtree en esta demo
 
-### 1. Componente central: `QuadTreeInteractive`
+### Componente central: `QuadTreeInteractive`
 
 Este script se encarga de orquestar todo:
 
