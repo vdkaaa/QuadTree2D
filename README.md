@@ -1,132 +1,132 @@
 <div align="center">
 
-  <h1>🌳 QuadTree2D</h1>
+  <h1 style="font-size:2.8rem; margin-bottom:0.2rem;">🌳 QuadTree2D</h1>
 
-  <p><strong>Demo de Quadtree espacial en 2D</strong><br/>
-  usando un jugador que se mueve y consulta sólo los nodos cercanos.</p>
+  <p style="font-size:1.1rem; max-width:680px;">
+    Demo interactiva de <strong>Quadtree 2D</strong> donde un jugador se mueve dentro de una nube de puntos
+    y consulta sólo los puntos cercanos usando una búsqueda espacial eficiente.
+  </p>
 
   <p>
-    <a href="https://github.com/vdkaaa/QuadTree2D/tree/main">
+    <a href="https://github.com/vdkaaa/QuadTree2D">
       <img src="https://img.shields.io/badge/repo-QuadTree2D-171717?logo=github" alt="Repo badge">
     </a>
     <img src="https://img.shields.io/badge/engine-Unity-000000?logo=unity" alt="Unity badge">
     <img src="https://img.shields.io/badge/language-C%23-239120?logo=csharp" alt="C# badge">
   </p>
 
-  <!-- Si subes un GIF o imagen de la demo, cambia la ruta de abajo -->
-  <!-- Ejemplo: guarda tu gif en Assets/Readme/quadtree-demo.gif y referencia la ruta relativa -->
+  <!-- Cambia la ruta por un GIF/imagen real de tu demo -->
   <p>
-    <img src="Assets/Readme/quadtree-demo.gif" alt="QuadTree2D demo" width="600">
+    <img src="Assets/Readme/quadtree-demo.gif" alt="QuadTree2D demo" width="640">
   </p>
 
 </div>
 
 ---
 
-## 🧩 Sobre el proyecto
+## 🧩 Resumen
 
-Este repositorio es un pequeño laboratorio para jugar con un **Quadtree en 2D**, donde:
+Este repo es un pequeño laboratorio para jugar con un **Quadtree en 2D**:
 
-- Un jugador puede moverse libremente por el mapa.
-- Los objetos de la escena se registran en un quadtree.
-- El jugador consulta sólo los **nodos cercanos**, en vez de iterar sobre todos los objetos. :contentReference[oaicite:0]{index=0}  
+- Se generan muchos puntos en un área usando `CircleSpawner2D`.
+- A partir de esas posiciones se construye un **Quadtree estático**.
+- Un jugador (`Transform player`) se mueve por el espacio.
+- Cada frame se ejecuta una **búsqueda en círculo** alrededor del jugador (`queryRadius`)
+  usando el quadtree en vez de revisar todos los puntos.
+- Los puntos que caen dentro del área de búsqueda se destacan visualmente.
 
-Además del quadtree, hay otros scripts y escenas que usé para probar ideas en 2D, pero el foco principal es mostrar **cómo usar la estructura de quadtree en un proyecto 2D**.
-
----
-
-## 🧠 ¿Qué es un Quadtree (versión corta)?
-
-Un **Quadtree** es una estructura de datos que divide el espacio 2D en 4 subregiones (cuadrantes) de forma recursiva:
-
-- Cada nodo representa un rectángulo del mundo.
-- Cuando un nodo tiene demasiados elementos, se subdivide en 4 hijos.
-- Las búsquedas de “objetos cercanos” se hacen sólo en los nodos relevantes,
-  evitando recorrer todos los elementos.
-
-Esto es muy útil para:
-
-- Detección de colisiones.
-- Búsqueda de vecinos.
-- Culling / optimización de rendimiento en juegos 2D.
+La idea principal es mostrar, de forma visual e interactiva, cómo un quadtree puede
+ayudar a optimizar consultas espaciales en un proyecto 2D.
 
 ---
 
-## 🎮 Cómo se usa el Quadtree en este proyecto
+## 🧠 Scripts principales
 
-> 👉 Esta sección es la que más te sirve para LinkedIn y para que otros devs entiendan cómo integrarlo.
+<div align="center">
 
-### 1. Estructura básica
+<table>
+  <thead>
+    <tr>
+      <th style="text-align:left;">Script</th>
+      <th style="text-align:left;">Rol en el proyecto</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>QuadTreeInteractive</code></td>
+      <td>
+        Componente principal de la demo.<br/>
+        Construye el quadtree a partir del <code>CircleSpawner2D</code>, ejecuta la búsqueda circular
+        alrededor del jugador y dibuja gizmos del árbol.
+      </td>
+    </tr>
+    <tr>
+      <td><code>QuadTreeStructs</code></td>
+      <td>
+        Contiene las estructuras y funciones del quadtree:<br/>
+        <code>QuadNode</code>, <code>AABBRect</code>, <code>CreateNode</code>, <code>InsertPoint</code>,
+        <code>QueryCircle</code>, <code>DrawNodeGizmos</code>, <code>QueryStats</code>, etc.
+      </td>
+    </tr>
+    <tr>
+      <td><code>CircleSpawner2D</code></td>
+      <td>
+        Genera una nube de puntos en 2D:<br/>
+        mantiene una lista de <code>positions</code> y de <code>spawned</code> GameObjects,
+        usada luego para construir el quadtree y para resaltar resultados.
+      </td>
+    </tr>
+    <tr>
+      <td><code>CirclePoint</code></td>
+      <td>
+        Script en cada punto instanciado.<br/>
+        Expone <code>SetHighlighted(bool)</code> para encender/apagar el highlight
+        según si el punto aparece en la última query.
+      </td>
+    </tr>
+    <tr>
+      <td><code>CameraFollow2D</code></td>
+      <td>
+        Hace que la cámara siga al <code>player</code> para que puedas moverte por la nube de puntos
+        y ver cómo cambia la búsqueda del quadtree.
+      </td>
+    </tr>
+  </tbody>
+</table>
 
-Normalmente tendrás algo así (cambia los nombres por los de tus scripts reales):
+</div>
 
-- `QuadTree2D` / `QuadTreeManager`  
-  Componente que mantiene la instancia principal del quadtree (root) y define:
-  - El tamaño del mundo 2D.
-  - Capacidad máxima por nodo.
-  - Profundidad máxima.
+---
 
-- `QuadTreeObject` (o similar)  
-  Script que agregas a los objetos que quieres que vivan dentro del quadtree.
-  Suele encargarse de:
-  - Registrarse en el quadtree al iniciar.
-  - Actualizar su posición en el quadtree cuando se mueve.
-  - Eliminarse del quadtree cuando se destruye.
+## 🔍 Cómo funciona el Quadtree en esta demo
 
-- `PlayerController`  
-  Controla el movimiento del jugador y hace las **consultas de vecinos** usando el quadtree.
+### 1. Componente central: `QuadTreeInteractive`
 
-- (Opcional) `QuadTreeDebugDrawer`  
-  Dibuja los límites de los nodos del quadtree en pantalla para debug/visualización.
+Este script se encarga de orquestar todo:
 
-### 2. Flujo de uso en la escena
+```csharp
+public class QuadTreeInteractive : MonoBehaviour
+{
+    [Header("Refs")]
+    public CircleSpawner2D spawner;
+    public Transform player;
+    public CameraFollow2D camFollow;
 
-1. **Crear el mundo / manager**
-   - Arrastras un `GameObject` vacío en la escena (por ejemplo `QuadTreeRoot`).
-   - Le añades el script `QuadTreeManager`.
-   - Configuras:
-     - **World Bounds** (ancho/alto del área que cubre el quadtree).
-     - **Capacidad por nodo** (cuántos objetos antes de subdividir).
-     - **Profundidad máxima** (para evitar subdividir infinito).
+    [Header("Quadtree")]
+    [Min(1)] public int capacity = 4;
+    [Min(0)] public int maxDepth = 8;
 
-2. **Registrar objetos en el quadtree**
-   - A cualquier entidad que quieras que participe en consultas espaciales le pones un script tipo `QuadTreeObject`.
-   - Ese script se encarga de decirle al manager:
-     ```csharp
-     void OnEnable()
-     {
-         QuadTreeManager.Instance.Register(this);
-     }
+    [Header("Query")]
+    public float queryRadius = 2.5f;
+    public bool rebuildEachFrame = false;
 
-     void OnDisable()
-     {
-         QuadTreeManager.Instance.Unregister(this);
-     }
-     ```
-   - Internamente, el manager llama algo como:
-     ```csharp
-     quadTree.Insert(this.Bounds, this);
-     ```
+    [Header("Debug")]
+    public bool drawTreeGizmos = true;
+    public Color gizmoBounds = new(1, 1, 0, 0.75f);
+    public Color gizmoPoints = new(0, 1, 1, 0.75f);
 
-3. **Consultar vecinos alrededor del jugador**
-
-   En el `PlayerController` (o en un sistema aparte) puedes hacer algo del estilo:
-
-   ```csharp
-   // Pseudocódigo – adapta los nombres a tus clases reales
-   var searchArea = new Rect(
-       playerPosition.x - visionRadius,
-       playerPosition.y - visionRadius,
-       visionRadius * 2f,
-       visionRadius * 2f
-   );
-
-   var nearbyObjects = quadTree.QueryRange(searchArea);
-
-   foreach (var obj in nearbyObjects)
-   {
-       // Aquí puedes:
-       // - Dibujar un gizmo
-       // - Hacer lógica de colisión
-       // - Mostrar info visual, etc.
-   }
+    QuadNode _root;
+    readonly List<Vector2> _results = new();
+    readonly HashSet<Vector2> _resultSet = new();
+    readonly QueryStats _stats = new();
+}
